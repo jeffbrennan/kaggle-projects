@@ -20,7 +20,6 @@ table(data.combined$Survived)
 ## class distribution
 table(data.combined$Pclass)
 
-## test test test 
 ## load ggplot 
 library(ggplot2)
 
