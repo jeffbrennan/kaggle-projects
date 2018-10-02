@@ -1,1 +1,1 @@
-# titanic-analysis
+# kaggle-projects
