@@ -171,15 +171,136 @@ ggplot(data.combined[1:891,], aes(x = family.size, fill = Survived)) +
 
 
 ## ticket
+str(data.combined$Ticket)
 
-## fare
+## convert from factor to string
+data.combined$Ticket = as.character(data.combined$Ticket)
+data.combined$Ticket[1:20]
+
+
+## figure out structture
+ticket.first.char = ifelse(data.combined$Ticket == "", " ", substr(data.combined$Ticket, 1, 1))
+unique(ticket.first.char)
+
+## convert to factor
+data.combined$ticket.first.char = as.factor(ticket.first.char)
+
+## make data plot (high level)
+
+ggplot(data.combined[1:891,], aes(x = ticket.first.char, fill = Survived)) +
+    # facet_wrap(~Pclass) +
+    geom_bar(width = 1) + 
+    xlab("First ticket char") +
+    ylab("Total Count") +
+    ylim(0,350) +
+    labs(fill = "Survived")
+
+
+## closer look
+ggplot(data.combined[1:891,], aes(x = ticket.first.char, fill = Survived)) +
+    facet_wrap(~Pclass) +
+    geom_bar(width = 1) + 
+    xlab("First ticket char") +
+    ylab("Total Count") +
+    ylim(0,300) +
+    labs(fill = "Survived")
+
+## even closer
+ggplot(data.combined[1:891,], aes(x = ticket.first.char, fill = Survived)) +
+    facet_wrap(~Pclass + title) +
+    geom_bar(width = 1) + 
+    xlab("First ticket char") +
+    ylab("Total Count") +
+    ylim(0,200) +
+    labs(fill = "Survived")
+
+
+#  use occams razor, ticket doesn't seem to have any strong relevance to survival
+#  better to use more simple techniques
+
+
+## fare - amount paid 
+summary(data.combined$Fare)
+length(unique(data.combined$Fare))
+str(data.combined$Fare)
+
+ggplot(data.combined[1:891,], aes(x = Fare)) +
+    geom_bar(width = 5) +
+    xlab("Fare") +
+    ylab("Total Count") +
+    ylim(0,50)
+
+
+## fare predictive power
+ggplot(data.combined[1:891,], aes(x = Fare, fill = Survived)) +
+    facet_wrap(~Pclass + title) +
+    geom_bar(width = 5) + 
+    xlab("First ticket char") +
+    ylab("Total Count") +
+    ylim(0,50) +
+    labs(fill = "Survived")
+
+
+## could potential overfit the model, not worthwhile to add as part of model
 
 ## cabin
+str(data.combined$Cabin)
 
-## embarked
+data.combined$Cabin = as.character(data.combined$Cabin)
+data.combined$Cabin[1:100]
+
+## replace empty cabins with U
+data.combined[which(data.combined$Cabin == ""), "Cabin"] <- "U"
+data.combined$Cabin[1:100]
+
+## look at first char 
+cabin.first.char = as.factor(substr(data.combined$Cabin, 1, 1))
+str(cabin.first.char)
+levels(cabin.first.char) ## shows all factor componenets
+
+## add to dataset
+data.combined$cabin.first.char = cabin.first.char
+
+
+ggplot(data.combined[1:891,], aes(x = cabin.first.char, fill = Survived)) +
+    geom_bar() + 
+    xlab("First ticket char") +
+    ylab("Total Count") +
+    labs(fill = "Survived")
+
+ggplot(data.combined[1:891,], aes(x = cabin.first.char, fill = Survived)) +
+    geom_bar() + 
+    facet_wrap(~Pclass) +
+    xlab("First ticket char") +
+    ylab("Total Count") +
+    labs(fill = "Survived")
+    
+
+ggplot(data.combined[1:891,], aes(x = cabin.first.char, fill = Survived)) +
+    geom_bar() + 
+    facet_wrap(~Pclass + title) +
+    xlab("First ticket char") +
+    ylab("Total Count") +
+    labs(fill = "Survived")
+
+
+## multiple cabins - doesn't work for some reason "could not find function "str_detect"
+data.combined$cabin.multiple <- as.factor(ifelse(str_detect(data.combined$cabin," "), "Y", "N"))
 
 
 
+
+## embarked - not v predective either
+
+str(data.combined$Embarked)
+levels(data.combined$Embarked)
+
+ggplot(data.combined[1:891,], aes(x = Embarked, fill = Survived)) +
+    geom_bar() + 
+    facet_wrap(~Pclass + title) +
+    xlab("First ticket char") +
+    ylab("Total Count") +
+    labs(fill = "Survived")
 
 
 
